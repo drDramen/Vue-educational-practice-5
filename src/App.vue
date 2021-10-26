@@ -1,12 +1,17 @@
 <template>
   <div id="app">
     <table-list v-bind="{ fields, items: users }">
-      <template #table-header="{ field }">
-        {{ field }}
+
+      <template #addHeadField="{ myClass }">
+        <div :class="myClass">Additional field</div>
       </template>
-      <template #table-body="{ item: user, myKey: key, field }">
-        <div :key="key" class="table__cell">{{ user[field] }}</div>
+
+      <template #addItemField="{ itemIndex, myClass }">
+        <div :class="myClass">
+          <button @click="deleteUser(itemIndex)" type="button">Удалить</button>
+        </div>
       </template>
+
     </table-list>
   </div>
 </template>
@@ -19,7 +24,7 @@ export default {
   name: 'App',
   data() {
     return {
-      fields: ['username', 'name', 'email', 'phone'],
+      fields: ['name', 'email', 'phone'],
       users: [],
     };
   },
@@ -31,12 +36,21 @@ export default {
       const response = await fetch('https://jsonplaceholder.typicode.com/users?_limit=5');
       this.users = await response.json();
     },
+    deleteUser(idx) {
+      this.users = this.users.filter((item) => item.id !== idx);
+    },
+
   },
   components: { TableList },
 };
 </script>
 
 <style lang="sass">
+*
+  margin: 0
+  padding: 0
+  box-sizing: border-box
+
 #app
   max-width: 1200px
   margin: 0 auto
