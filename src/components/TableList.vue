@@ -2,21 +2,27 @@
   <div class="table">
 
     <div class="table__row table__header">
-      <div
-        v-for="(field, idx) in fields" :key="idx" class="table__col"
-      >
-        {{ field }}
-      </div>
-
-      <slot myClass="table__col" name="addHeadField"></slot>
+      <slot
+        v-for="(field, idx) in fields"
+        :field="field"
+        :myKey="idx"
+        name="mainHeadField"
+        myClass="table__col"
+      ></slot>
+      <slot name="addField" myClass="table__col"></slot>
     </div>
 
     <div class="table__body">
       <div v-for="item in items" :key="item.id" class="table__row">
-        <div v-for="(field, idx) in fields" :key="idx" class="table__col">
-          {{ item[field] }}
-        </div>
-        <slot :itemIndex="item.id" myClass="table__col" name="addItemField"></slot>
+        <slot
+          v-for="(field, idx) in fields"
+          :item="item"
+          :field="field"
+          :myKey="idx"
+          name="mainHeadField"
+          myClass="table__col"
+        ></slot>
+        <slot :itemIndex="item.id" myClass="table__col" name="addField"></slot>
       </div>
     </div>
 

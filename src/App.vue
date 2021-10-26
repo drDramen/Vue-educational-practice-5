@@ -2,12 +2,13 @@
   <div id="app">
     <table-list v-bind="{ fields, items: users }">
 
-      <template #addHeadField="{ myClass }">
-        <div :class="myClass">Additional field</div>
+      <template #mainHeadField="{ field, myKey, myClass, item}">
+        <div :class="myClass" :key="myKey">{{ item ? item[field] : field }}</div>
       </template>
 
-      <template #addItemField="{ itemIndex, myClass }">
-        <div :class="myClass">
+      <template #addField="{ itemIndex, myClass }">
+        <div v-if="!itemIndex" :class="myClass">Additional field</div>
+        <div v-else :class="myClass">
           <button type="button" @click="deleteUser(itemIndex)">Удалить</button>
         </div>
       </template>
@@ -25,7 +26,7 @@ export default {
   components: { TableList },
   data() {
     return {
-      fields: ['name', 'email', 'phone'],
+      fields: ['username', 'name', 'email', 'phone'],
       users: [],
     };
   },
@@ -34,7 +35,7 @@ export default {
   },
   methods: {
     async getUsers() {
-      const response = await fetch('https://jsonplaceholder.typicode.com/users?_limit=5');
+      const response = await fetch('https://jsonplaceholder.typicode.com/users?_limit=10');
       this.users = await response.json();
     },
     deleteUser(idx) {
