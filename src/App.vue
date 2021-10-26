@@ -8,7 +8,7 @@
 
       <template #addItemField="{ itemIndex, myClass }">
         <div :class="myClass">
-          <button @click="deleteUser(itemIndex)" type="button">Удалить</button>
+          <button type="button" @click="deleteUser(itemIndex)">Удалить</button>
         </div>
       </template>
 
@@ -22,6 +22,7 @@ import TableList from '@/components/TableList.vue';
 
 export default {
   name: 'App',
+  components: { TableList },
   data() {
     return {
       fields: ['name', 'email', 'phone'],
@@ -39,9 +40,7 @@ export default {
     deleteUser(idx) {
       this.users = this.users.filter((item) => item.id !== idx);
     },
-
   },
-  components: { TableList },
 };
 </script>
 

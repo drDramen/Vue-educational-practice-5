@@ -8,7 +8,7 @@
         {{ field }}
       </div>
 
-      <slot name="addHeadField" myClass="table__col"></slot>
+      <slot myClass="table__col" name="addHeadField"></slot>
     </div>
 
     <div class="table__body">
@@ -16,7 +16,7 @@
         <div v-for="(field, idx) in fields" :key="idx" class="table__col">
           {{ item[field] }}
         </div>
-        <slot name="addItemField" :itemIndex="item.id" myClass="table__col"></slot>
+        <slot :itemIndex="item.id" myClass="table__col" name="addItemField"></slot>
       </div>
     </div>
 
