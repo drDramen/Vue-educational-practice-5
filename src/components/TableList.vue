@@ -22,7 +22,7 @@
           name="mainHeadField"
           myClass="table__col"
         ></slot>
-        <slot :itemIndex="item.id" myClass="table__col" name="addField"></slot>
+        <slot :item="item" myClass="table__col" name="addField"></slot>
       </div>
     </div>
 

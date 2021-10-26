@@ -1,19 +1,39 @@
 <template>
   <div id="app">
+    <form v-if="edit" class="editBlock" @submit.prevent="save">
+      <template v-for="(field, idx) in fields">
+        <input
+          :key="idx"
+          type="text"
+          :name="field"
+          :value="user[field]"
+        >
+        <!--        <input :key="idx" type="text" v-model="user[field]">-->
+      </template>
+      <button type="submit">Сохранить</button>
+      <button @click="cancel" type="button">Отмена</button>
+    </form>
+
     <table-list v-bind="{ fields, items: users }">
 
       <template #mainHeadField="{ field, myKey, myClass, item}">
-        <div :class="myClass" :key="myKey">{{ item ? item[field] : field }}</div>
+        <div :key="myKey" :class="myClass">{{ item ? item[field] : field }}</div>
       </template>
 
-      <template #addField="{ itemIndex, myClass }">
-        <div v-if="!itemIndex" :class="myClass">Additional field</div>
+      <template #addField="{ item, myClass }">
+        <div v-if="!item" :class="myClass">Additional field</div>
         <div v-else :class="myClass">
-          <button type="button" @click="deleteUser(itemIndex)">Удалить</button>
+          <button type="button" @click="deleteUser(item.id)">Удалить</button>
+          <button type="button" @click="editUser(item)">Редактировать</button>
+        </div>
+        <div v-if="!item" :class="myClass">Full address</div>
+        <div v-else :class="myClass">
+          {{ fullyAddress(item.address) }}
         </div>
       </template>
 
     </table-list>
+
   </div>
 </template>
 
@@ -28,6 +48,8 @@ export default {
     return {
       fields: ['username', 'name', 'email', 'phone'],
       users: [],
+      user: {},
+      edit: false,
     };
   },
   created() {
@@ -40,6 +62,25 @@ export default {
     },
     deleteUser(idx) {
       this.users = this.users.filter((item) => item.id !== idx);
+    },
+    editUser(user) {
+      this.user = user;
+      this.edit = true;
+    },
+    fullyAddress({ zipcode, city, street }) {
+      return `${zipcode}, ${city}, ${street}`;
+    },
+    save(e) {
+      const form = e.target;
+      this.fields.forEach((f) => {
+        this.user[f] = form.elements[f].value;
+      });
+      this.user = {};
+      this.edit = false;
+    },
+    cancel() {
+      this.user = {};
+      this.edit = false;
     },
   },
 };
@@ -60,5 +101,14 @@ export default {
   -moz-osx-font-smoothing: grayscale
   text-align: center
   color: #2c3e50
+
+.editBlock
+  padding: 30px 20px
+  text-align: left
+
+  input, button
+    display: inline-block
+    margin-left: 10px
+    padding: 5px 10px
 
 </style>
