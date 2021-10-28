@@ -48,16 +48,16 @@ export default {
           },
           sort: () => this.sort('name'),
         },
-        {
-          key: 'test',
-          label: 'Text',
-          additional: true,
-          events: {
-            edit: (item) => {
-              console.log(item);
-            },
-          },
-        },
+        // {
+        //   key: 'test',
+        //   label: 'Text',
+        //   additional: true,
+        //   events: {
+        //     edit: (item) => {
+        //       console.log(item);
+        //     },
+        //   },
+        // },
       ],
     };
   },

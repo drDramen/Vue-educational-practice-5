@@ -52,16 +52,20 @@ export default {
     headers() {
       // TODO: additional functional
       const additional = this.columns.filter((c) => c.additional);
+      const headers = Object.keys(this.items[0] || {})
+        .map((h) => ({
+          key: h,
+          label: h,
+        }));
 
-      if (!this.columns.length || additional.length) {
-        const headers = Object.keys(this.items[0] || {})
-          .map((h) => ({
-            key: h,
-            label: h,
-          }));
+      if (this.columns.length && this.columns.length !== additional.length) {
+        return this.columns;
+      }
 
+      if (additional.length) {
         additional.forEach((additionalHead) => {
           const head = headers.find((h) => h.key === additionalHead.key);
+
           if (head) {
             const headIndex = headers.indexOf(head);
             headers[headIndex] = additionalHead;
@@ -69,11 +73,9 @@ export default {
             headers.push(additionalHead);
           }
         });
-
-        return headers;
       }
 
-      return this.columns;
+      return headers;
     },
   },
 };
