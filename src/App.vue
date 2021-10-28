@@ -1,87 +1,106 @@
 <template>
   <div id="app">
-    <form v-if="edit" class="editBlock" @submit.prevent="save">
-      <template v-for="(field, idx) in fields">
-        <input
-          :key="idx"
-          type="text"
-          :name="field"
-          :value="user[field]"
-        >
-        <!--        <input :key="idx" type="text" v-model="user[field]">-->
-      </template>
-      <button type="submit">Сохранить</button>
-      <button @click="cancel" type="button">Отмена</button>
-    </form>
+    <test @click="sort"/>
 
-    <table-list v-bind="{ fields, items: users }">
+    <table-list :items="users" :columns="columns">
 
-      <template #mainHeadField="{ field, myKey, myClass, item}">
-        <div :key="myKey" :class="myClass">{{ item ? item[field] : field }}</div>
+      <template v-slot:header-name="{header}">
+        {{ toUp(header.label) }}
       </template>
 
-      <template #addField="{ item, myClass }">
-        <div v-if="!item" :class="myClass">Additional field</div>
-        <div v-else :class="myClass">
-          <button type="button" @click="deleteUser(item.id)">Удалить</button>
-          <button type="button" @click="editUser(item)">Редактировать</button>
-        </div>
-        <div v-if="!item" :class="myClass">Full address</div>
-        <div v-else :class="myClass">
-          {{ fullyAddress(item.address) }}
-        </div>
+      <template v-slot:address="{field}">
+        str. {{ field.street }}
+      </template>
+
+      <template v-slot:test="{item, events}">
+        <button @click="events.edit(item)">Edit {{ item.name }}</button>
       </template>
 
     </table-list>
-
+    <!--    <table-list :items="test"/>-->
   </div>
 </template>
 
 <script>
 
 import TableList from '@/components/TableList.vue';
+import Test from '@/components/Test.vue';
 
 export default {
   name: 'App',
-  components: { TableList },
+  components: { Test, TableList },
   data() {
     return {
-      fields: ['username', 'name', 'email', 'phone'],
       users: [],
-      user: {},
-      edit: false,
+      columns: [
+        {
+          key: 'name',
+          label: 'Name',
+          additional: true,
+          editable: true,
+          events: {
+            blur: (e) => {
+              console.log(e.target.innerText);
+            },
+            focus: () => {
+              console.log(1);
+            },
+          },
+          sort: () => this.sort('name'),
+        },
+        {
+          key: 'test',
+          label: 'Text',
+          additional: true,
+          events: {
+            edit: (item) => {
+              console.log(item);
+            },
+          },
+        },
+      ],
     };
   },
-  created() {
-    this.getUsers();
+  async created() {
+    await this.getUsers();
   },
   methods: {
     async getUsers() {
       const response = await fetch('https://jsonplaceholder.typicode.com/users?_limit=10');
       this.users = await response.json();
     },
-    deleteUser(idx) {
-      this.users = this.users.filter((item) => item.id !== idx);
+    toUp(str) {
+      return str.toUpperCase();
     },
-    editUser(user) {
-      this.user = user;
-      this.edit = true;
+    tableCellChange(e, item, fieldName) {
+      const user = this.users.find((u) => u.id === item.id);
+      user[fieldName] = e.target.innerText;
     },
-    fullyAddress({ zipcode, city, street }) {
-      return `${zipcode}, ${city}, ${street}`;
+    sort() {
+      console.log(1);
     },
-    save(e) {
-      const form = e.target;
-      this.fields.forEach((f) => {
-        this.user[f] = form.elements[f].value;
-      });
-      this.user = {};
-      this.edit = false;
-    },
-    cancel() {
-      this.user = {};
-      this.edit = false;
-    },
+    // deleteUser(idx) {
+    //   this.users = this.users.filter((item) => item.id !== idx);
+    // },
+    //   editUser(user) {
+    //     this.user = user;
+    //     this.edit = true;
+    //   },
+    //   fullyAddress({ zipcode, city, street }) {
+    //     return `${zipcode}, ${city}, ${street}`;
+    //   },
+    //   save(e) {
+    //     const form = e.target;
+    //     this.fields.forEach((f) => {
+    //       this.user[f] = form.elements[f].value;
+    //     });
+    //     this.user = {};
+    //     this.edit = false;
+    //   },
+    //   cancel() {
+    //     this.user = {};
+    //     this.edit = false;
+    //   },
   },
 };
 </script>
