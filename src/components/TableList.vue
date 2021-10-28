@@ -17,19 +17,27 @@
         </template>
       </tr>
       <tr v-for="item in items" :key="item.id">
-        <td v-for="(header, index) in headers"
+        <template v-for="(header, index) in headers">
+          <td
             :key="`${index}-${item.id}`"
             :contenteditable="header.editable"
             v-on="header.events">
-          <slot :name="header.key"
-                :item="item"
-                :field="item[header.key]"
-                :events="header.events"
-                :fieldName="header.key"
-                :editable="header.editable || false">
-            {{ item[header.key] }}
-          </slot>
-        </td>
+            <slot
+              v-if="!$slots[`${header.key}${item.id}`]"
+              :name="header.key"
+              :item="item"
+              :field="item[header.key]"
+              :events="header.events"
+              :fieldName="header.key"
+              :editable="header.editable || false">
+              {{ item[header.key] }}
+            </slot>
+<!--            <slot v-else :name="`${header.key}${item.id}`"-->
+<!--                  :field="item[header.key]">-->
+<!--              {{ `${header.key}-${item.id}` }}-->
+<!--            </slot>-->
+          </td>
+        </template>
       </tr>
     </table>
   </div>
@@ -48,8 +56,12 @@ export default {
       default: () => [],
     },
   },
+  mounted() {
+    console.log(this.$slots);
+  },
   computed: {
     headers() {
+      console.log(this.$slots);
       // TODO: additional functional
       const additional = this.columns.filter((c) => c.additional);
       const headers = Object.keys(this.items[0] || {})

@@ -4,17 +4,24 @@
 
     <table-list :items="users" :columns="columns">
 
-      <template v-slot:header-name="{header}">
-        {{ toUp(header.label) }}
+      <template v-slot:title2>
+        wergt
+      </template>
+      <template v-slot:title="{field}" >
+        {{field}} ///
       </template>
 
-      <template v-slot:address="{field}">
-        str. {{ field.street }}
-      </template>
+<!--      <template v-slot:header-name="{header}">-->
+<!--        {{ toUp(header.label) }}-->
+<!--      </template>-->
 
-      <template v-slot:test="{item, events}">
-        <button @click="events.edit(item)">Edit {{ item.name }}</button>
-      </template>
+<!--      <template v-slot:address="{field}">-->
+<!--        str. {{ field.street }}-->
+<!--      </template>-->
+
+<!--      <template v-slot:test="{item, events}">-->
+<!--        <button @click="events.edit(item)">Edit {{ item.name }}</button>-->
+<!--      </template>-->
 
     </table-list>
     <!--    <table-list :items="test"/>-->
@@ -33,21 +40,21 @@ export default {
     return {
       users: [],
       columns: [
-        {
-          key: 'name',
-          label: 'Name',
-          additional: true,
-          editable: true,
-          events: {
-            blur: (e) => {
-              console.log(e.target.innerText);
-            },
-            focus: () => {
-              console.log(1);
-            },
-          },
-          sort: () => this.sort('name'),
-        },
+        // {
+        //   key: 'name',
+        //   label: 'Name',
+        //   additional: true,
+        //   editable: true,
+        //   events: {
+        //     blur: (e) => {
+        //       console.log(e.target.innerText);
+        //     },
+        //     focus: () => {
+        //       console.log(1);
+        //     },
+        //   },
+        //   sort: () => this.sort('name'),
+        // },
         // {
         //   key: 'test',
         //   label: 'Text',
@@ -66,7 +73,7 @@ export default {
   },
   methods: {
     async getUsers() {
-      const response = await fetch('https://jsonplaceholder.typicode.com/users?_limit=10');
+      const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
       this.users = await response.json();
     },
     toUp(str) {
