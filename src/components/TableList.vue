@@ -21,7 +21,7 @@
           <td
             :key="`${index}-${item.id}`"
             :contenteditable="header.editable"
-            v-on="header.events">
+            @blur="header.events.blur($event, item, header.key)">
             <slot
               v-if="!$slots[`${header.key}${item.id}`]"
               :name="header.key"
@@ -32,10 +32,10 @@
               :editable="header.editable || false">
               {{ item[header.key] }}
             </slot>
-<!--            <slot v-else :name="`${header.key}${item.id}`"-->
-<!--                  :field="item[header.key]">-->
-<!--              {{ `${header.key}-${item.id}` }}-->
-<!--            </slot>-->
+            <!--            <slot v-else :name="`${header.key}${item.id}`"-->
+            <!--                  :field="item[header.key]">-->
+            <!--              {{ `${header.key}-${item.id}` }}-->
+            <!--            </slot>-->
           </td>
         </template>
       </tr>
@@ -57,11 +57,11 @@ export default {
     },
   },
   mounted() {
-    console.log(this.$slots);
+    // console.log(this.$slots);
   },
   computed: {
     headers() {
-      console.log(this.$slots);
+      // console.log(this.$slots);
       // TODO: additional functional
       const additional = this.columns.filter((c) => c.additional);
       const headers = Object.keys(this.items[0] || {})

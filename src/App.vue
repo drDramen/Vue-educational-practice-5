@@ -1,114 +1,26 @@
 <template>
   <div id="app">
-    <test @click="sort"/>
-
-    <table-list :items="users" :columns="columns">
-
-      <template v-slot:title2>
-        wergt
+    <button @click="modalOpen = !modalOpen">modal open</button>
+    <hr>
+    <modal @ok="()=>{}" @cancel="()=>{}" :is-open="modalOpen">
+      do you want delete?
+      <template #footer>
+        <button>OKkk!</button>
       </template>
-      <template v-slot:title="{field}" >
-        {{field}} ///
-      </template>
-
-<!--      <template v-slot:header-name="{header}">-->
-<!--        {{ toUp(header.label) }}-->
-<!--      </template>-->
-
-<!--      <template v-slot:address="{field}">-->
-<!--        str. {{ field.street }}-->
-<!--      </template>-->
-
-<!--      <template v-slot:test="{item, events}">-->
-<!--        <button @click="events.edit(item)">Edit {{ item.name }}</button>-->
-<!--      </template>-->
-
-    </table-list>
-    <!--    <table-list :items="test"/>-->
+    </modal>
   </div>
 </template>
 
 <script>
-
-import TableList from '@/components/TableList.vue';
-import Test from '@/components/Test.vue';
+import Modal from '@/components/Modal.vue';
 
 export default {
   name: 'App',
-  components: { Test, TableList },
-  data() {
-    return {
-      users: [],
-      columns: [
-        // {
-        //   key: 'name',
-        //   label: 'Name',
-        //   additional: true,
-        //   editable: true,
-        //   events: {
-        //     blur: (e) => {
-        //       console.log(e.target.innerText);
-        //     },
-        //     focus: () => {
-        //       console.log(1);
-        //     },
-        //   },
-        //   sort: () => this.sort('name'),
-        // },
-        // {
-        //   key: 'test',
-        //   label: 'Text',
-        //   additional: true,
-        //   events: {
-        //     edit: (item) => {
-        //       console.log(item);
-        //     },
-        //   },
-        // },
-      ],
-    };
-  },
-  async created() {
-    await this.getUsers();
-  },
-  methods: {
-    async getUsers() {
-      const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
-      this.users = await response.json();
-    },
-    toUp(str) {
-      return str.toUpperCase();
-    },
-    tableCellChange(e, item, fieldName) {
-      const user = this.users.find((u) => u.id === item.id);
-      user[fieldName] = e.target.innerText;
-    },
-    sort() {
-      console.log(1);
-    },
-    // deleteUser(idx) {
-    //   this.users = this.users.filter((item) => item.id !== idx);
-    // },
-    //   editUser(user) {
-    //     this.user = user;
-    //     this.edit = true;
-    //   },
-    //   fullyAddress({ zipcode, city, street }) {
-    //     return `${zipcode}, ${city}, ${street}`;
-    //   },
-    //   save(e) {
-    //     const form = e.target;
-    //     this.fields.forEach((f) => {
-    //       this.user[f] = form.elements[f].value;
-    //     });
-    //     this.user = {};
-    //     this.edit = false;
-    //   },
-    //   cancel() {
-    //     this.user = {};
-    //     this.edit = false;
-    //   },
-  },
+  data: () => ({
+    modalOpen: false,
+  }),
+  components: { Modal },
+  methods: {},
 };
 </script>
 
