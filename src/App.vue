@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <table-list v-bind="{ fields, items: users }">
-
-      <template #addHeadField="{ myClass }">
-        <div :class="myClass">Additional field</div>
+    <table-list v-bind="{ columns, items: users }">
+      <template #header-name="{ header }">
+        {{ (header.label || header.key).toUpperCase() }}
       </template>
 
-      <template #addItemField="{ itemIndex, myClass }">
-        <div :class="myClass">
-          <button type="button" @click="deleteUser(itemIndex)">Удалить</button>
-        </div>
+      <template #header="{ header }">
+        <div style="color:brown">{{ (header.label || header.key).toUpperCase() }}</div>
       </template>
 
+      <template #actions="{ item: user }">
+        <button style="padding: 2px 5px" @click="deleteUser(user.id)" type="button">X</button>
+      </template>
     </table-list>
   </div>
 </template>
@@ -25,12 +25,17 @@ export default {
   components: { TableList },
   data() {
     return {
-      fields: ['name', 'email', 'phone'],
+      columns: [
+        { key: 'name', sort: true },
+        'email',
+        'phone',
+        'actions',
+      ],
       users: [],
     };
   },
-  created() {
-    this.getUsers();
+  async created() {
+    await this.getUsers();
   },
   methods: {
     async getUsers() {
