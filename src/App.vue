@@ -1,11 +1,19 @@
 <template>
   <div id="app">
-    <button @click="modalOpen = !modalOpen">modal open</button>
+    <button @click="openModal">modal open</button>
     <hr>
-    <modal @ok="()=>{}" @cancel="()=>{}" :is-open="modalOpen">
+    <modal ref="modal">
       do you want delete?
-      <template #footer>
-        <button>OKkk!</button>
+
+<!--      <template #footer="{done}">-->
+<!--        <button @click="done">OKkk!</button>-->
+<!--      </template>-->
+    </modal>
+
+    <modal ref="modal1">
+      really??
+      <template #footer="{done}">
+        <button @click="done">OKkk!</button>
       </template>
     </modal>
   </div>
@@ -16,11 +24,31 @@ import Modal from '@/components/Modal.vue';
 
 export default {
   name: 'App',
-  data: () => ({
-    modalOpen: false,
-  }),
+  data: () => ({}),
   components: { Modal },
-  methods: {},
+  methods: {
+    async openModal() {
+      try {
+        const model = await this.$refs.modal.open();
+        console.log(model.isOpen);
+        // if (true) {
+        //   throw new Error('qwfewr');
+        // }
+      } catch (e) {
+        console.log(e);
+      }
+      //   this.$refs.modal1.open()
+      //       console.log(data);
+      //     })
+      //     .catch(() => {
+      //       console.log(2);
+      //     });
+      // })
+      // .catch(() => {
+      //   console.log(2);
+      // });
+    },
+  },
 };
 </script>
 

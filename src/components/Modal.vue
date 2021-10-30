@@ -9,9 +9,9 @@
       <slot></slot>
     </div>
     <div class="footer">
-      <slot name="footer">
+      <slot name="footer" :done="done">
         <button @click="cancel">Cancel</button>
-        <button @click="ok">OK</button>
+        <button @click="done">OK</button>
       </slot>
     </div>
   </div>
@@ -21,19 +21,37 @@
 export default {
   name: 'Modal',
   data: () => ({
-    // isOpen: false,
+    isOpen: false,
+    resolve: null,
+    reject: null,
   }),
   props: {
-    isOpen: {
-      default: false,
-    },
+    // isOpen: {
+    //   default: false,
+    // },
   },
   methods: {
-    ok() {
-      this.$emit('ok');
+    open() {
+      this.isOpen = true;
+
+      return new Promise((resolve, reject) => {
+        this.resolve = resolve;
+        this.reject = reject;
+      });
     },
+
     cancel() {
-      this.$emit('cancel');
+      this.hide();
+      this.reject('cancel');
+    },
+
+    done() {
+      this.hide();
+      this.resolve(this);
+    },
+
+    hide() {
+      this.isOpen = false;
     },
   },
 };
