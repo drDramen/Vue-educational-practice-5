@@ -1,118 +1,21 @@
 <template>
   <div id="app">
-    <table-list v-bind="{ sortingHeaderKey, columns, items: filteredItems }" @sort="sort">
-      <template #header="{ header }">
-        {{ (header.label || header.key).toUpperCase() }}
-      </template>
-
-      <!--      <template #header-name="{ header }">-->
-      <!--        {{ (header.label || header.key).toUpperCase() }}-->
-      <!--      </template>-->
-
-      <template #email="{ item: user, header }">
-        {{ user[header.key].toLowerCase() }}
-      </template>
-
-      <template #city="{ item: user, header }">
-        {{ user.address[header.key] }}
-      </template>
-
-      <template #actions="{ item: user }">
-        <div class="actions__wrap">
-          <button
-            type="button"
-            @click="deleteUser(user, 'modalDel')"
-          >&#10006;
-          </button>
-          <button type="button">&#9998;</button>
-        </div>
-      </template>
-
-    </table-list>
-
-    <modal ref="modalDel">
-      <template v-slot:header>
-        Удалить?
-      </template>
-
-      <template v-slot:default>
-        {{ removable.name }}
-      </template>
-    </modal>
+    <step-form/>
   </div>
 </template>
 
 <script>
 
-import TableList from '@/components/TableList.vue';
-import Modal from '@/components/Modal.vue';
+import StepForm from '@/components/stepForm/StepForm.vue';
 
 export default {
   name: 'App',
-  components: { Modal, TableList },
+  components: { StepForm },
   data() {
-    return {
-      columns: [
-        { key: 'name', editable: true, sort: { direction: -1 } },
-        { key: 'email', sort: { direction: 1 } },
-        { key: 'phone', sort: { direction: 1 } },
-        { key: 'city', additional: true },
-        { key: 'actions', class: 'actions', additional: true },
-      ],
-      sortingHeaderKey: 'name',
-      users: [],
-      removable: null,
-    };
+    return {};
   },
-  async created() {
-    await this.getUsers();
-  },
-
-  computed: {
-    sortingHeader() {
-      return this.columns.find((h) => h.key === this.sortingHeaderKey) || {};
-    },
-    filteredItems() {
-      let { users } = this;
-      const curHeader = this.sortingHeader;
-      if (Object.prototype.hasOwnProperty.call(curHeader, 'sort')) {
-        const { direction } = curHeader.sort;
-        users = users.sort((a, b) => {
-          const fA = a[curHeader.key];
-          const fB = b[curHeader.key];
-          if (fA > fB) return -1 * direction;
-          if (fA < fB) return direction;
-          return 0;
-        });
-      }
-      return users;
-    },
-  },
-  methods: {
-    async getUsers() {
-      const response = await fetch('https://jsonplaceholder.typicode.com/users?_limit=5');
-      this.users = await response.json();
-    },
-    async deleteUser(user, modal) {
-      this.removable = user;
-      try {
-        await this.openModal(modal);
-
-        this.users = this.users.filter((item) => item.id !== user.id);
-      } catch (e) {
-        console.log('Отмена');
-      }
-    },
-    sort(evt) {
-      this.sortingHeaderKey = evt;
-      console.log('Sort:', this.sortingHeaderKey);
-      this.sortingHeader.sort.direction *= -1;
-    },
-    async openModal(modal) {
-      const model = await this.$refs[modal].open();
-      console.log(model);
-    },
-  },
+  computed: {},
+  methods: {},
 
 };
 

@@ -34,7 +34,7 @@
         v-for="header in headers"
         :key="`header-${header.key}`"
         class="table__body-cell"
-        :class="header.class"
+        :class="header.classes"
         :contenteditable="header.editable"
         @blur="item[header.key] = $event.target.innerHTML.trim()"
       >
